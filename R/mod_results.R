@@ -130,15 +130,21 @@ mod_results_server <- function(id, rv, classify_method) {
 
     # Output: has summary flag
     output$has_summary <- reactive({
-      !is.null(rv$exposure) && classify_method() != "none"
+      if (is.null(rv$exposure)) return(FALSE)
+      method <- classify_method()
+      if (is.null(method) || length(method) == 0) return(FALSE)
+      method != "none"
     })
     outputOptions(output, "has_summary", suspendWhenHidden = FALSE)
 
     # Render exposure map
     output$exposure_map <- renderPlot({
       req(rv$exposure)
+      req(classify_method())
 
-      if (classify_method() == "none") {
+      method <- classify_method()
+
+      if (method == "none") {
         # Continuous scale
         if (!is.null(rv$aoi)) {
           fire_exp_map(rv$exposure, rv$aoi)
@@ -148,9 +154,9 @@ mod_results_server <- function(id, rv, classify_method) {
       } else {
         # Classified
         if (!is.null(rv$aoi)) {
-          fire_exp_map(rv$exposure, rv$aoi, classify = classify_method())
+          fire_exp_map(rv$exposure, rv$aoi, classify = method)
         } else {
-          fire_exp_map(rv$exposure, classify = classify_method())
+          fire_exp_map(rv$exposure, classify = method)
         }
       }
     })
@@ -158,12 +164,15 @@ mod_results_server <- function(id, rv, classify_method) {
     # Render summary table
     output$summary_table <- renderTable({
       req(rv$exposure)
-      req(classify_method() != "none")
+      req(classify_method())
+
+      method <- classify_method()
+      req(method != "none")
 
       if (!is.null(rv$aoi)) {
-        fire_exp_summary(rv$exposure, rv$aoi, classify = classify_method())
+        fire_exp_summary(rv$exposure, rv$aoi, classify = method)
       } else {
-        fire_exp_summary(rv$exposure, classify = classify_method())
+        fire_exp_summary(rv$exposure, classify = method)
       }
     })
 

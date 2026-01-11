@@ -1,5 +1,7 @@
 # Fire Exposure Assessment Shiny App
 
+
+
 A basic interactive web application for exploring wildfire exposure using the [fireexposuR](https://github.com/ropensci/fireexposuR) R package.
 
 **Architecture:** This app uses a modular Shiny structure for maintainability and scalability. See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
@@ -208,7 +210,7 @@ For issues with:
 
 ## Author
 
-Created as a basic functional mockup for exploring fireexposuR capabilities.
+Created as a basic functional mockup for exploring fireexposuR served as an app.
 
 ---
 
